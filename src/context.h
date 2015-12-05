@@ -1,0 +1,76 @@
+#ifndef CONTEXT_H
+#define CONTEXT_H
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Includes
+//
+#ifndef MODULE_H
+#	include "module.h"
+#endif
+
+#ifndef STACK_H
+#	include "stack.h"
+#endif
+
+// STD Includes
+#include <memory>
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+namespace medusa {
+////////////////////////////////////////////////////////////////////////////////
+
+class CModule;
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CContext
+//
+class CContext
+{
+public:// Constructors
+	CContext(std::shared_ptr<CStack> pStack, std::shared_ptr<CModule> pModule)
+		 : m_pStack(pStack),
+		   m_pModule(pModule),
+		   m_nIP(0),
+		   m_nFP(0)
+	{}
+	~CContext() = default;
+
+public:// Interface Methodes
+	inline std::shared_ptr<CStack> GetStack()
+	{
+		return m_pStack;
+	}
+	inline std::shared_ptr<CModule> GetModule()
+	{
+		return m_pModule;
+	}
+	inline int& IP()
+	{
+		return m_nIP;
+	}
+	inline int& FP()
+	{
+		return m_nFP;
+	}
+	inline int& SP()
+	{
+		return m_pStack->SP();
+	}
+
+private:// Members
+	std::shared_ptr<CModule> m_pModule;
+	std::shared_ptr<CStack> m_pStack;
+	int m_nIP;
+	int m_nFP;
+};
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+} // namespace medusa
+////////////////////////////////////////////////////////////////////////////////
+
+#endif // CONTEXT_H

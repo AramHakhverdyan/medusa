@@ -1,0 +1,108 @@
+#ifndef EXPRESSION_TREE_H
+#define EXPRESSION_TREE_H
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Includes
+//
+#ifndef CONTEXT_H
+#	include "context.h"
+#endif
+
+// STD Includes
+
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+namespace medusa {
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// interface IExpression
+//
+class IExpression
+{
+public:// Constructors
+	IExpression()
+	{}
+	~IExpression()
+	{}
+
+public:// Interface Methodes
+	virtual int Eval(std::shared_ptr<CContext> pContext) = 0;
+
+private:// Members
+
+};
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CAddExpression
+//
+class CAddExpression : public IExpression
+{
+public:// Constructors
+	CAddExpression()
+		: m_nOffset(1)
+	{}
+	~CAddExpression() = default;
+
+public:// Interface Methodes
+	inline int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack>& pStack = pContext->GetStack();
+		int nLValue = pStack->Pop();
+		int nRValue = pStack->Pop();
+		pStack->Push(nLValue + nRValue);
+
+		return m_nOffset;
+	}
+
+protected:// Helper Functions
+
+
+private:// Members
+	int m_nOffset;
+};
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CPushCExpression
+//
+class CPushCExpression : public IExpression
+{
+public:// Constructors
+	CPushCExpression(int nArgument = 0)
+		: m_nArgument(nArgument),
+		  m_nOffset(1)
+	{}
+	~CPushCExpression() = default;
+
+public:// Interface Methodes
+	inline int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack> pStack = pContext->GetStack();
+		pStack->Push(m_nArgument);
+
+		return m_nOffset;
+	}
+
+protected:// Helper Functions
+
+
+private:// Members
+	int m_nOffset;
+	int m_nArgument;
+};
+////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////
+} // namespace medusa
+////////////////////////////////////////////////////////////////////////////////
+
+#endif // EXPRESSION_TREE_H
