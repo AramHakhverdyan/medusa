@@ -13,7 +13,6 @@
 #	include "operation.h"
 #endif
 
-
 // STD Includes
 #include <map>
 #include <string>

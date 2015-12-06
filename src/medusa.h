@@ -31,9 +31,8 @@ class CMedusa
 {
 public:// Constructors
 	inline CMedusa();
-	CMedusa(std::string const& strFilePath);
-	~CMedusa()
-	{}
+	inline CMedusa(std::string const& strFilePath);
+	inline ~CMedusa() = default;
 
 public:// Interface Methodes
 	inline void Execute();
@@ -64,7 +63,13 @@ private:// Members
 inline CMedusa::CMedusa()
 	: m_pModuleManager(new (std::nothrow) CModuleManager),
 	  m_mapIDToProcess()
+{}
+
+inline CMedusa::CMedusa(std::string const& strFilePath)
+	: m_pModuleManager(new (std::nothrow) CModuleManager),
+	m_mapIDToProcess()
 {
+	CreateProcess(strFilePath);
 }
 
 // Interface Methodes

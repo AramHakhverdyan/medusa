@@ -39,7 +39,7 @@ class CProcess
 {
 public:// Constructors
 	inline CProcess(std::shared_ptr<CModule> pModule);
-	~CProcess() = default;
+	inline ~CProcess() = default;
 
 public:// Interface Methodes
 	void Start();

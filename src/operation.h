@@ -67,22 +67,46 @@ enum class EOpCode : char
 class COperation
 {
 public:// Constructors
-	COperation();
-	~COperation();
+	inline COperation();
+	inline ~COperation() = default;
 
 public:// Interface Methodes
 	void Init();
 
 	std::string const& GetName(EOpCode eOpCode) const;
-	EOpCode GetOpCode(std::string const& strOperation) const
-	{
-		return m_mapStringToCode.at(strOperation);
-	}
+	inline EOpCode GetOpCode(std::string const& strOperation) const;
 
 private:// Members
 	std::map<std::string, EOpCode> m_mapStringToCode;
 };
 ////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////// Implementing inline methods //////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CContext
+//
+
+// Constructors
+inline COperation::COperation()
+	: m_mapStringToCode()
+{
+	Init();
+}
+
+// Interface Methodes
+inline EOpCode COperation::GetOpCode(std::string const& strOperation) const
+{
+	auto mapIterator = m_mapStringToCode.find(strOperation);
+	if (mapIterator == m_mapStringToCode.end())
+		return EOpCode::NOP;
+
+	return mapIterator->second;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace medusa

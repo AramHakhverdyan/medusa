@@ -25,10 +25,8 @@ namespace medusa {
 class IExpression
 {
 public:// Constructors
-	IExpression()
-	{}
-	~IExpression()
-	{}
+	inline IExpression() = default;
+	inline ~IExpression() = default;
 
 public:// Interface Methodes
 	virtual int Eval(std::shared_ptr<CContext> pContext) = 0;
@@ -45,13 +43,13 @@ private:// Members
 class CAddExpression : public IExpression
 {
 public:// Constructors
-	CAddExpression()
+	inline CAddExpression()
 		: m_nOffset(1)
 	{}
-	~CAddExpression() = default;
+	inline ~CAddExpression() = default;
 
 public:// Interface Methodes
-	inline int Eval(std::shared_ptr<CContext> pContext)
+	int Eval(std::shared_ptr<CContext> pContext)
 	{
 		std::shared_ptr<CStack>& pStack = pContext->GetStack();
 		int nLValue = pStack->Pop();
@@ -76,14 +74,14 @@ private:// Members
 class CPushCExpression : public IExpression
 {
 public:// Constructors
-	CPushCExpression(int nArgument = 0)
+	inline CPushCExpression(int nArgument = 0)
 		: m_nArgument(nArgument),
 		  m_nOffset(1)
 	{}
-	~CPushCExpression() = default;
+	inline ~CPushCExpression() = default;
 
 public:// Interface Methodes
-	inline int Eval(std::shared_ptr<CContext> pContext)
+	int Eval(std::shared_ptr<CContext> pContext)
 	{
 		std::shared_ptr<CStack> pStack = pContext->GetStack();
 		pStack->Push(m_nArgument);

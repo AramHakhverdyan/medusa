@@ -21,7 +21,6 @@
 namespace medusa {
 ////////////////////////////////////////////////////////////////////////////////
 
-class CModule;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -30,35 +29,16 @@ class CModule;
 class CContext
 {
 public:// Constructors
-	CContext(std::shared_ptr<CStack> pStack, std::shared_ptr<CModule> pModule)
-		 : m_pStack(pStack),
-		   m_pModule(pModule),
-		   m_nIP(0),
-		   m_nFP(0)
-	{}
-	~CContext() = default;
+	inline CContext(std::shared_ptr<CStack> pStack, std::shared_ptr<CModule> pModule);
+	inline ~CContext() = default;
 
 public:// Interface Methodes
-	inline std::shared_ptr<CStack> GetStack()
-	{
-		return m_pStack;
-	}
-	inline std::shared_ptr<CModule> GetModule()
-	{
-		return m_pModule;
-	}
-	inline int& IP()
-	{
-		return m_nIP;
-	}
-	inline int& FP()
-	{
-		return m_nFP;
-	}
-	inline int& SP()
-	{
-		return m_pStack->SP();
-	}
+	inline std::shared_ptr<CStack> GetStack();
+	inline std::shared_ptr<CModule> GetModule();
+
+	inline int& IP();
+	inline int& FP();
+	inline int& SP();
 
 private:// Members
 	std::shared_ptr<CModule> m_pModule;
@@ -66,6 +46,45 @@ private:// Members
 	int m_nIP;
 	int m_nFP;
 };
+////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////// Implementing inline methods //////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CContext
+//
+
+// Constructors
+inline CContext::CContext(std::shared_ptr<CStack> pStack, std::shared_ptr<CModule> pModule)
+	: m_pStack(pStack),
+	m_pModule(pModule),
+	m_nIP(0),
+	m_nFP(0)
+{}
+
+// Interface Methodes
+inline std::shared_ptr<CStack> CContext::GetStack()
+{
+	return m_pStack;
+}
+inline std::shared_ptr<CModule> CContext::GetModule()
+{
+	return m_pModule;
+}
+inline int& CContext::IP()
+{
+	return m_nIP;
+}
+inline int& CContext::FP()
+{
+	return m_nFP;
+}
+inline int& CContext::SP()
+{
+	return m_pStack->SP();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 

@@ -35,7 +35,7 @@ public:// Native Types
 
 public:// Constructor
 	inline CInterrupt(EInterrupt eIterrupt = Default, std::string strMessage = "");
-	~CInterrupt() = default;
+	inline ~CInterrupt() = default;
 
 public:// Interface Methodes
 	inline EInterrupt GetInterrupt() const;
@@ -58,9 +58,7 @@ private:// Members
 inline CInterrupt::CInterrupt(EInterrupt eIterrupt, std::string strMessage)
 	: m_strMessage(strMessage),
 	  m_eIterrupt(eIterrupt)
-{
-
-}
+{}
 
 // Interface Methodes
 inline CInterrupt::EInterrupt CInterrupt::GetInterrupt() const

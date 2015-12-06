@@ -15,18 +15,11 @@ namespace medusa {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Implementation class COperation
+// class COperation
 //
-medusa::COperation::COperation()
-	: m_mapStringToCode()
-{
-	Init();
-}
 
-medusa::COperation::~COperation()
-{}
-
-void medusa::COperation::Init()
+// Interface Methodes
+void COperation::Init()
 {
 	std::initializer_list<std::string> strInitList = {
 		"LABEL",

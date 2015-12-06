@@ -3,7 +3,6 @@
 // Includes
 //
 #include "module.h"
-#include "operation.h"
 
 // STD Includes
 #include <fstream>
@@ -67,16 +66,6 @@ CModule::CModule(std::string const& strModulePath)
 					int nArgument = 0;
 					for (++i; i < nSize; ++i)
 					{
-						//if (pBuffer[i] == ' ' || pBuffer[i] == '\t')
-						//{
-						//	if (strIdent == "")
-						//		continue;
-
-						//	nArgument = std::stoi(strIdent);
-						//	++i;
-						//	break;
-						//}
-
 						if (pBuffer[i] == '\n' || pBuffer[i] == '\r')
 						{
 							++i;

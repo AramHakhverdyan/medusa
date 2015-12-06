@@ -24,7 +24,7 @@ class CStack
 {
 public:// Constructors
 	inline CStack(int nSize = 0);
-	~CStack() = default;
+	inline ~CStack() = default;
 
 public:// Interface Methodes
 	inline int GetSize();
