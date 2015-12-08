@@ -36,7 +36,9 @@ public:// Constructors
 
 public:// Interface Methodes
 	inline void Execute();
+
 	inline int CreateProcess(std::string const& strFilePath);
+	inline void EndProcess(int const nProcessID);
 
 protected:// Helper Functions
 	int CreateProcess(std::shared_ptr<CModule> pModule);
@@ -85,10 +87,24 @@ inline int CMedusa::CreateProcess(std::string const& strFilePath)
 	return CreateProcess(pModule);
 }
 
+inline void CMedusa::EndProcess(int const nProcessID)
+{
+	auto mapIterator = m_mapIDToProcess.find(nProcessID);
+	if (mapIterator == m_mapIDToProcess.end())
+		return;
+
+	std::shared_ptr<CProcess> pProcess = mapIterator->second;;
+	pProcess->End();
+}
+
 // Helper Functions
 inline void CMedusa::StartProcess(int const nProcessID)
 {
-	std::shared_ptr<CProcess> pProcess = m_mapIDToProcess.at(nProcessID);
+	auto mapIterator = m_mapIDToProcess.find(nProcessID);
+	if (mapIterator == m_mapIDToProcess.end())
+		return;
+
+	std::shared_ptr<CProcess> pProcess = mapIterator->second;;
 	pProcess->Start();
 }
 

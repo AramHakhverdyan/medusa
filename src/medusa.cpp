@@ -39,6 +39,8 @@ void CMedusa::StartAllProcess()
 		CProcess* pProcess = (mapIterator->second).get();
 		if (pProcess != nullptr)
 			pProcess->Start();
+
+		++mapIterator;
 	}
 }
 

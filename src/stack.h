@@ -69,7 +69,7 @@ inline int& CStack::SP()
 
 inline int CStack::Top()
 {
-	return m_arrMemory[m_nSP];
+	return m_arrMemory[m_nSP - 1];
 }
 
 inline void CStack::Push(int nValue)

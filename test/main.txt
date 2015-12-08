@@ -1,0 +1,6 @@
+; main
+PUSHC 10
+PUSHC 3
+ADD
+OUT
+HALT

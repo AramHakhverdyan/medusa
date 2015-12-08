@@ -43,7 +43,10 @@ public:// Constructors
 
 public:// Interface Methodes
 	void Start();
-	inline std::shared_ptr<CStack>& GetStack() const;
+	void End();
+	inline std::shared_ptr<const CStack> GetStack() const;
+	inline std::shared_ptr<const CModule> GetModule() const;
+	inline std::shared_ptr<const CContext> GetContext() const;
 
 private:
 	std::shared_ptr<CStack> m_pStack;
@@ -70,6 +73,20 @@ CProcess::CProcess(std::shared_ptr<CModule> pModule)
 }
 
 // Interface Methodes
+inline std::shared_ptr<const CStack> CProcess::GetStack() const
+{
+	return m_pStack;
+}
+
+inline std::shared_ptr<const CModule> CProcess::GetModule() const
+{
+	return m_pModule;
+}
+
+inline std::shared_ptr<const CContext> CProcess::GetContext() const
+{
+	return m_pContext;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 

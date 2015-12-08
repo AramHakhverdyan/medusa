@@ -19,96 +19,98 @@ namespace medusa {
 //
 std::shared_ptr<IExpression> CExpressionBuilder::BuildExpression(int const nOffset)
 {
-	EOpCode eOpCode = m_pModule->GetOpCode(nOffset);
+	COperations::ECode eOpCode = m_pModule->GetOpCode(nOffset);
 	std::shared_ptr<IExpression> pExpression;
 	IExpression* pExpr = nullptr;
 	int nArgument = m_pModule->GetArgument(nOffset);
 
 	switch (eOpCode)
 	{
-	case medusa::EOpCode::LABEL:
+	case medusa::COperations::ECode::LABEL:
 		break;
-	case medusa::EOpCode::PUSHR:
+	case medusa::COperations::ECode::PUSHR:
 		break;
-	case medusa::EOpCode::PUSHC:
+	case medusa::COperations::ECode::PUSHC:
 		pExpression = std::shared_ptr<IExpression>(new CPushCExpression(nArgument));
 		break;
-	case medusa::EOpCode::HALT:
+	case medusa::COperations::ECode::HALT:
+		pExpression = std::shared_ptr<IExpression>(new CHaltExpression());
 		break;
-	case medusa::EOpCode::JUMP:
+	case medusa::COperations::ECode::JUMP:
 		break;
-	case medusa::EOpCode::JUMPZ:
+	case medusa::COperations::ECode::JUMPZ:
 		break;
-	case medusa::EOpCode::JUMPI:
+	case medusa::COperations::ECode::JUMPI:
 		break;
-	case medusa::EOpCode::CALL:
+	case medusa::COperations::ECode::CALL:
 		break;
-	case medusa::EOpCode::ENTER:
+	case medusa::COperations::ECode::ENTER:
 		break;
-	case medusa::EOpCode::MARK:
+	case medusa::COperations::ECode::MARK:
 		break;
-	case medusa::EOpCode::RETURN:
+	case medusa::COperations::ECode::RETURN:
 		break;
-	case medusa::EOpCode::POP:
+	case medusa::COperations::ECode::POP:
 		break;
-	case medusa::EOpCode::DUP:
+	case medusa::COperations::ECode::DUP:
 		break;
-	case medusa::EOpCode::SLIDE:
+	case medusa::COperations::ECode::SLIDE:
 		break;
-	case medusa::EOpCode::LOADC:
+	case medusa::COperations::ECode::LOADC:
 		break;
-	case medusa::EOpCode::LOAD:
+	case medusa::COperations::ECode::LOAD:
 		break;
-	case medusa::EOpCode::LOADA:
+	case medusa::COperations::ECode::LOADA:
 		break;
-	case medusa::EOpCode::LOADR:
+	case medusa::COperations::ECode::LOADR:
 		break;
-	case medusa::EOpCode::LOADRC:
+	case medusa::COperations::ECode::LOADRC:
 		break;
-	case medusa::EOpCode::STORE:
+	case medusa::COperations::ECode::STORE:
 		break;
-	case medusa::EOpCode::STOREA:
+	case medusa::COperations::ECode::STOREA:
 		break;
-	case medusa::EOpCode::STORER:
+	case medusa::COperations::ECode::STORER:
 		break;
-	case medusa::EOpCode::ALLOC:
+	case medusa::COperations::ECode::ALLOC:
 		break;
-	case medusa::EOpCode::MALLOC:
+	case medusa::COperations::ECode::MALLOC:
 		break;
-	case medusa::EOpCode::NEW:
+	case medusa::COperations::ECode::NEW:
 		break;
-	case medusa::EOpCode::AND:
+	case medusa::COperations::ECode::AND:
 		break;
-	case medusa::EOpCode::OR:
+	case medusa::COperations::ECode::OR:
 		break;
-	case medusa::EOpCode::EQ:
+	case medusa::COperations::ECode::EQ:
 		break;
-	case medusa::EOpCode::NEQ:
+	case medusa::COperations::ECode::NEQ:
 		break;
-	case medusa::EOpCode::GR:
+	case medusa::COperations::ECode::GR:
 		break;
-	case medusa::EOpCode::GEQ:
+	case medusa::COperations::ECode::GEQ:
 		break;
-	case medusa::EOpCode::LE:
+	case medusa::COperations::ECode::LE:
 		break;
-	case medusa::EOpCode::LEQ:
+	case medusa::COperations::ECode::LEQ:
 		break;
-	case medusa::EOpCode::ADD:
+	case medusa::COperations::ECode::ADD:
 		pExpression = std::shared_ptr<IExpression>(new CAddExpression());
 		break;
-	case medusa::EOpCode::SUB:
+	case medusa::COperations::ECode::SUB:
 		break;
-	case medusa::EOpCode::MUL:
+	case medusa::COperations::ECode::MUL:
 		break;
-	case medusa::EOpCode::DIV:
+	case medusa::COperations::ECode::DIV:
 		break;
-	case medusa::EOpCode::NEG:
+	case medusa::COperations::ECode::NEG:
 		break;
-	case medusa::EOpCode::IN:
+	case medusa::COperations::ECode::IN:
 		break;
-	case medusa::EOpCode::OUT:
+	case medusa::COperations::ECode::OUT:
+		pExpression = std::shared_ptr<IExpression>(new COutExpression());
 		break;
-	case medusa::EOpCode::NOP:
+	case medusa::COperations::ECode::NOP:
 		break;
 	default:
 		break;

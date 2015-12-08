@@ -30,9 +30,15 @@ void CProcess::Start()
 			m_pContext->IP() += pExpression->Eval(m_pContext);
 		}
 	}
-	catch (...)
+	catch (CInterrupt& pInterrupt)
 	{
+		std::cout << std::endl << pInterrupt.GetMessage() << std::endl;
 	}
+}
+
+void CProcess::End()
+{
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

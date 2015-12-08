@@ -2,7 +2,7 @@
 //
 // Includes
 //
-#include "operation.h"
+#include "operations.h"
 
 // STD Includes
 #include <vector>
@@ -15,11 +15,11 @@ namespace medusa {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// class COperation
+// class COperations
 //
 
 // Interface Methodes
-void COperation::Init()
+void COperations::Init()
 {
 	std::initializer_list<std::string> strInitList = {
 		"LABEL",
@@ -69,7 +69,7 @@ void COperation::Init()
 
 	for (int i = 0; i < arrString.size(); ++i)
 	{
-		m_mapStringToCode.emplace(arrString[i], (EOpCode)i);
+		m_mapStringToOpCode.emplace(arrString[i], (ECode)i);
 	}
 
 }

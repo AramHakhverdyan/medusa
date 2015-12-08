@@ -9,8 +9,8 @@
 #	include "interrupt.h"
 #endif
 
-#ifndef OPERATION_H
-#	include "operation.h"
+#ifndef OPERATIONS_H
+#	include "operations.h"
 #endif
 
 // STD Includes
@@ -33,18 +33,17 @@ class CModule
 {
 public:// Constructors
 	CModule(std::string const& strModulePath);
-	~CModule() = default;
+	inline ~CModule() = default;
 
 public:// Interface Methodes
-	inline EOpCode GetOpCode(int nOffset) const;
+	inline COperations::ECode GetOpCode(int nOffset) const;
 
 	inline int GetArgument(int nOffset) const;
 
 	inline int GetSize() const;
 
 private:// Members
-	std::vector<EOpCode> m_arrOpCode;
-	std::vector<int> m_arrArgument;
+	std::vector<std::pair<COperations::ECode, int> > m_arrPairOpCodeArgument;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -76,21 +75,22 @@ private:// Members
 //
 
 // Interface Methodes
-inline EOpCode CModule::GetOpCode(int nOffset) const
+inline COperations::ECode CModule::GetOpCode(int nOffset) const
 {
-	if (nOffset >= m_arrOpCode.size())
-		return m_arrOpCode[m_arrOpCode.size() - 1];
-	return m_arrOpCode[nOffset];
+	if ((nOffset < 0) || (nOffset >= m_arrPairOpCodeArgument.size()))
+		return COperations::ECode::NOP;
+
+	return m_arrPairOpCodeArgument[nOffset].first;
 }
 
 inline int CModule::GetArgument(int nOffset) const
 {
-	return m_arrArgument[nOffset];
+	return m_arrPairOpCodeArgument[nOffset].second;
 }
 
 inline int CModule::GetSize() const
 {
-	return m_arrOpCode.size();
+	return m_arrPairOpCodeArgument.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

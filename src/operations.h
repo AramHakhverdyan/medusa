@@ -1,5 +1,5 @@
-#ifndef OPERATION_H
-#define OPERATION_H
+#ifndef OPERATIONS_H
+#define OPERATIONS_H
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -15,69 +15,71 @@
 namespace medusa {
 ////////////////////////////////////////////////////////////////////////////////
 
-enum class EOpCode : char
-{
-	LABEL,
-	PUSHR,
-	PUSHC,
-	HALT,
-	JUMP,
-	JUMPZ,
-	JUMPI,
-	CALL,
-	ENTER,
-	MARK,
-	RETURN,
-	POP,
-	DUP,
-	SLIDE,
-	LOADC,
-	LOAD,
-	LOADA,
-	LOADR,
-	LOADRC,
-	STORE,
-	STOREA,
-	STORER,
-	ALLOC,
-	MALLOC,
-	NEW,
-	AND,
-	OR,
-	EQ,
-	NEQ,
-	GR,
-	GEQ,
-	LE,
-	LEQ,
-	ADD,
-	SUB,
-	MUL,
-	DIV,
-	NEG,
-	IN,
-	OUT,
-	NOP
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// class COperation
+// class COperations
 //
-class COperation
+class COperations
 {
+public:// Types
+	enum class ECode : char
+	{
+		LABEL,
+		PUSHR,
+		PUSHC,
+		HALT,
+		JUMP,
+		JUMPZ,
+		JUMPI,
+		CALL,
+		ENTER,
+		MARK,
+		RETURN,
+		POP,
+		DUP,
+		SLIDE,
+		LOADC,
+		LOAD,
+		LOADA,
+		LOADR,
+		LOADRC,
+		STORE,
+		STOREA,
+		STORER,
+		ALLOC,
+		MALLOC,
+		NEW,
+		AND,
+		OR,
+		EQ,
+		NEQ,
+		GR,
+		GEQ,
+		LE,
+		LEQ,
+		ADD,
+		SUB,
+		MUL,
+		DIV,
+		NEG,
+		IN,
+		OUT,
+		NOP
+	};
+
 public:// Constructors
-	inline COperation();
-	inline ~COperation() = default;
+	inline COperations();
+	inline ~COperations() = default;
 
 public:// Interface Methodes
 	void Init();
 
-	std::string const& GetName(EOpCode eOpCode) const;
-	inline EOpCode GetOpCode(std::string const& strOperation) const;
+	std::string const& GetName(ECode eOpCode) const;
+	inline ECode GetOpCode(std::string const& strOperation) const;
 
 private:// Members
-	std::map<std::string, EOpCode> m_mapStringToCode;
+	std::map<std::string, ECode> m_mapStringToOpCode;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -89,18 +91,18 @@ private:// Members
 //
 
 // Constructors
-inline COperation::COperation()
-	: m_mapStringToCode()
+inline COperations::COperations()
+	: m_mapStringToOpCode()
 {
 	Init();
 }
 
 // Interface Methodes
-inline EOpCode COperation::GetOpCode(std::string const& strOperation) const
+inline COperations::ECode COperations::GetOpCode(std::string const& strOperation) const
 {
-	auto mapIterator = m_mapStringToCode.find(strOperation);
-	if (mapIterator == m_mapStringToCode.end())
-		return EOpCode::NOP;
+	auto mapIterator = m_mapStringToOpCode.find(strOperation);
+	if (mapIterator == m_mapStringToOpCode.end())
+		return ECode::NOP;
 
 	return mapIterator->second;
 }
@@ -113,4 +115,4 @@ inline EOpCode COperation::GetOpCode(std::string const& strOperation) const
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#endif // OPERATION_H
+#endif // OPERATIONS_H

@@ -35,8 +35,9 @@ CModule::CModule(std::string const& strModulePath)
 	std::cout.write(pBuffer, nSize);
 
 	bool bFlag = false;
+	COperations operations;
 	std::string strIdent = "";
-	COperation operation;
+	std::pair<COperations::ECode, int> pairOpCodeArgument(COperations::ECode::NOP, 0);
 	for (int i = 0; i < nSize; ++i)
 	{
 		if (pBuffer[i] != ' ' && pBuffer[i] != '\n'
@@ -59,39 +60,42 @@ CModule::CModule(std::string const& strModulePath)
 			{
 				if ((strIdent[0] < '0') || (strIdent[0] > '9'))
 				{
-					EOpCode eOpCode = operation.GetOpCode(strIdent);
-					m_arrOpCode.push_back(eOpCode);
-					strIdent = "";
+					pairOpCodeArgument.first = operations.GetOpCode(strIdent);
 
 					int nArgument = 0;
+					std::string strArgument = "";
 					for (++i; i < nSize; ++i)
 					{
 						if (pBuffer[i] == '\n' || pBuffer[i] == '\r')
 						{
-							++i;
-							if (strIdent != "")
-								nArgument = std::stoi(strIdent);
+							if (strArgument != "")
+								nArgument = std::stoi(strArgument);
 
 							break;
 						}
 
-						strIdent.push_back(pBuffer[i]);
+						strArgument.push_back(pBuffer[i]);
 					}
 
-					m_arrArgument.push_back(nArgument);
+					pairOpCodeArgument.second = nArgument;
 				}
 				// interrupt
 
+
+				m_arrPairOpCodeArgument.push_back(pairOpCodeArgument);
+
 				strIdent = "";
+				pairOpCodeArgument.first = COperations::ECode::NOP;
+				pairOpCodeArgument.second = 0;
 			}
 		}
 	}
 	if (strIdent != "")
 	{
-		EOpCode eOpCode = operation.GetOpCode(strIdent);
-		m_arrOpCode.push_back(eOpCode);
+		pairOpCodeArgument.first = operations.GetOpCode(strIdent);
+		pairOpCodeArgument.second = 0;
 
-		m_arrArgument.push_back(0);
+		m_arrPairOpCodeArgument.push_back(pairOpCodeArgument);
 	}
 
 	delete[] pBuffer;
