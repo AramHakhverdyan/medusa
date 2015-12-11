@@ -22,47 +22,47 @@ namespace medusa {
 void COperations::Init()
 {
 	std::initializer_list<std::string> strInitList = {
-		"LABEL",
-		"PUSHR",
-		"PUSHC",
+		"NOP",
+
 		"HALT",
-		"JUMP",
-		"JUMPZ",
-		"JUMPI",
-		"CALL",
-		"ENTER",
-		"MARK",
-		"RETURN",
+
+		"PUSHC",
+		"PUSHA",
+		"PUSHR",
+
 		"POP",
+		"POPA",
+		"POPR",
+
 		"DUP",
-		"SLIDE",
-		"LOADC",
-		"LOAD",
-		"LOADA",
-		"LOADR",
-		"LOADRC",
-		"STORE",
-		"STOREA",
-		"STORER",
-		"ALLOC",
-		"MALLOC",
-		"NEW",
+		"EXCH",
+
+		"IN",
+		"OUT",
+
+		"LABEL",
+
+		"JUMP",
+		"JZ",
+		"JNZ",
+
+		"EQ",
+		"NE",
+		"GT",
+		"GE",
+		"LT",
+		"LE",
+
+		"NOT",
 		"AND",
 		"OR",
-		"EQ",
-		"NEQ",
-		"GR",
-		"GEQ",
-		"LE",
-		"LEQ",
+
+		"NEG",
 		"ADD",
 		"SUB",
 		"MUL",
 		"DIV",
-		"NEG",
-		"IN",
-		"OUT",
-		"NOP"
+		"MOD"
 	};
 
 	std::vector<std::string> arrString(strInitList);

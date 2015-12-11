@@ -38,12 +38,15 @@ public:// Constructors
 public:// Interface Methodes
 	inline COperations::ECode GetOpCode(int nOffset) const;
 
+	inline char* GetBuffer(int nOffset);
+
 	inline int GetArgument(int nOffset) const;
 
 	inline int GetSize() const;
 
 private:// Members
 	std::vector<std::pair<COperations::ECode, int> > m_arrPairOpCodeArgument;
+	std::shared_ptr<char> m_pBuffer;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -81,6 +84,11 @@ inline COperations::ECode CModule::GetOpCode(int nOffset) const
 		return COperations::ECode::NOP;
 
 	return m_arrPairOpCodeArgument[nOffset].first;
+}
+
+inline char* CModule::GetBuffer(int nOffset)
+{
+	return &(m_pBuffer.get()[nOffset]);
 }
 
 inline int CModule::GetArgument(int nOffset) const

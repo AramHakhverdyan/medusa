@@ -32,6 +32,9 @@ public:// Constructors
 public:// Interface Methodes
 	std::shared_ptr<IExpression> BuildExpression(int const nOffset);
 
+protected:// Helper Functions
+	std::shared_ptr<IExpression> BuldOpCode(char);
+
 private:// Members
 	std::shared_ptr<CModule> m_pModule;
 };

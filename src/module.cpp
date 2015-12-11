@@ -3,6 +3,7 @@
 // Includes
 //
 #include "module.h"
+#include "parser.h"
 
 // STD Includes
 #include <fstream>
@@ -22,6 +23,9 @@ namespace medusa {
 // Constructors
 CModule::CModule(std::string const& strModulePath)
 {
+	parser::CParser parser;
+	m_pBuffer = parser.Parse(strModulePath);
+
 	std::ifstream inFile(strModulePath, std::ifstream::binary);
 	std::filebuf* pFileBuf = inFile.rdbuf();
 

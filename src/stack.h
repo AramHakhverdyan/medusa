@@ -88,7 +88,12 @@ inline void CStack::Push(int nValue)
 
 inline int CStack::Pop()
 {
-	return m_arrMemory[--m_nSP];
+	if (m_nSP != 0)
+		return m_arrMemory[--m_nSP];
+
+	// interrupt
+
+	return m_arrMemory[0];
 }
 
 inline int CStack::operator[](int nOffset) const

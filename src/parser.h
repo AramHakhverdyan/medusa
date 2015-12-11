@@ -1,85 +1,42 @@
-#ifndef OPERATIONS_H
-#define OPERATIONS_H
+#ifndef PARSER_H
+#define PARSER_H
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Includes
 //
+#ifndef OPERATIONS_H
+#	include "operations.h"
+#endif
 
 // STD Includes
-#include <map>
 #include <string>
+#include <memory>
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 namespace medusa {
 ////////////////////////////////////////////////////////////////////////////////
+namespace parser {
+////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// class COperations
+// class CParser
 //
-class COperations
+class CParser
 {
-public:// Types
-	enum class ECode : char
-	{
-		NOP,
-		
-		HALT,
-
-		PUSHC,
-		PUSHA,
-		PUSHR,
-
-		POP,
-		POPA,
-		POPR,
-
-		DUP,
-		EXCH,
-
-		IN,
-		OUT,
-
-		LABEL,
-
-		JUMP,
-		JZ,
-		JNZ,
-
-		EQ,
-		NE,
-		GT,
-		GE,
-		LT,
-		LE,
-
-		NOT,
-		AND,
-		OR,
-
-		NEG,
-		ADD,
-		SUB,
-		MUL,
-		DIV,
-		MOD
-	};
-
 public:// Constructors
-	inline COperations();
-	inline ~COperations() = default;
+	inline CParser() = default;
+	inline ~CParser() = default;
 
 public:// Interface Methodes
-	void Init();
+	std::shared_ptr<char> Parse(std::string const& strFilePath);
 
-	std::string const& GetName(ECode eOpCode) const;
-	inline ECode GetOpCode(std::string const& strOperation) const;
+private:// Helper Functions
 
-private:// Members
-	std::map<std::string, ECode> m_mapStringToOpCode;
+
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -87,32 +44,23 @@ private:// Members
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// class CContext
+// class CParser
 //
 
 // Constructors
-inline COperations::COperations()
-	: m_mapStringToOpCode()
-{
-	Init();
-}
+
 
 // Interface Methodes
-inline COperations::ECode COperations::GetOpCode(std::string const& strOperation) const
-{
-	auto mapIterator = m_mapStringToOpCode.find(strOperation);
-	if (mapIterator == m_mapStringToOpCode.end())
-		return ECode::NOP;
 
-	return mapIterator->second;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////
+} // namespace parser
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace medusa
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#endif // OPERATIONS_H
+#endif // PARSER_H
