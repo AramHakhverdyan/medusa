@@ -36,8 +36,6 @@ public:// Constructors
 	inline ~CModule() = default;
 
 public:// Interface Methodes
-	inline COperations::ECode GetOpCode(int nOffset) const;
-
 	inline char* GetBuffer(int nOffset);
 
 	inline int GetArgument(int nOffset) const;
@@ -78,14 +76,6 @@ private:// Members
 //
 
 // Interface Methodes
-inline COperations::ECode CModule::GetOpCode(int nOffset) const
-{
-	if ((nOffset < 0) || (nOffset >= m_arrPairOpCodeArgument.size()))
-		return COperations::ECode::NOP;
-
-	return m_arrPairOpCodeArgument[nOffset].first;
-}
-
 inline char* CModule::GetBuffer(int nOffset)
 {
 	return &(m_pBuffer.get()[nOffset]);

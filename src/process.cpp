@@ -26,7 +26,7 @@ void CProcess::Start()
 	{
 		while (true)
 		{
-			std::shared_ptr<IExpression> pExpression = m_pExpressionManager->GetExpression(m_pContext->IP());
+			std::shared_ptr<expr::IExpression> pExpression = m_pExpressionManager->GetExpression(m_pContext->IP());
 			m_pContext->IP() += pExpression->Eval(m_pContext);
 		}
 	}

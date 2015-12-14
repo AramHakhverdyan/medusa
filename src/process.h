@@ -44,6 +44,7 @@ public:// Constructors
 public:// Interface Methodes
 	void Start();
 	void End();
+
 	inline std::shared_ptr<const CStack> GetStack() const;
 	inline std::shared_ptr<const CModule> GetModule() const;
 	inline std::shared_ptr<const CContext> GetContext() const;
@@ -52,7 +53,7 @@ private:
 	std::shared_ptr<CStack> m_pStack;
 	std::shared_ptr<CModule> m_pModule;
 	std::shared_ptr<CContext> m_pContext;
-	std::unique_ptr<CExpressionManager> m_pExpressionManager;
+	std::unique_ptr<expr::CExpressionManager> m_pExpressionManager;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -65,11 +66,11 @@ private:
 
 // Constructors
 CProcess::CProcess(std::shared_ptr<CModule> pModule)
-	: m_pModule(pModule)
+	: m_pModule(pModule),
+	  m_pExpressionManager(new expr::CExpressionManager(pModule))
 {
 	m_pStack = std::shared_ptr<CStack>(new CStack(100));
 	m_pContext = std::shared_ptr<CContext>(new CContext(m_pStack, m_pModule));
-	m_pExpressionManager = std::unique_ptr<CExpressionManager>(new CExpressionManager(m_pModule));
 }
 
 // Interface Methodes

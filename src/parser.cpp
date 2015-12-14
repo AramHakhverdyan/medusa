@@ -10,12 +10,12 @@
 #include <iostream>
 ////////////////////////////////////////////////////////////////////////////////
 
+
 ////////////////////////////////////////////////////////////////////////////////
 namespace medusa {
 ////////////////////////////////////////////////////////////////////////////////
 namespace parser {
 ////////////////////////////////////////////////////////////////////////////////
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ std::shared_ptr<char> CParser::Parse(std::string const& strFilePath)
 					{
 						if (pBuffer[i] == '\n' || pBuffer[i] == '\r')
 						{
-							if (strArgument != "")
+							if ((strArgument != "") && (strArgument[0] >= '0') && (strArgument[0] <= '9'))
 								nArgument = std::stoi(strArgument);
 
 							break;
@@ -129,17 +129,21 @@ std::shared_ptr<char> CParser::Parse(std::string const& strFilePath)
 					if ((eOpCode == COperations::ECode::PUSHR) || (eOpCode == COperations::ECode::PUSHA) ||
 						(eOpCode == COperations::ECode::POPR) || (eOpCode == COperations::ECode::POPA))
 					{
-						strByteCode = strArgument[0] + strArgument[1];
-						strArgument.erase(0, 2);
+						strByteCode += strArgument[0] + strArgument[1];
 
-						if (strArgument != "")
-							nArgument = std::stoi(strArgument);
+						if ((eOpCode == COperations::ECode::PUSHA) || (eOpCode == COperations::ECode::POPA))
+						{
+							strArgument.erase(0, 2);
 
-						char* pTemChar;
-						pTemChar = (char*) &nArgument;
+							if (strArgument != "")
+								nArgument = std::stoi(strArgument);
 
-						for (int i = 0; i < 4; ++i)
-							strByteCode += pTemChar[i];
+							char* pTemChar;
+							pTemChar = (char*) &nArgument;
+
+							for (int i = 0; i < 4; ++i)
+								strByteCode += pTemChar[i];
+						}
 
 						continue;
 					}
@@ -153,6 +157,9 @@ std::shared_ptr<char> CParser::Parse(std::string const& strFilePath)
 		}
 	}
 	delete[] pBuffer;
+
+	int nOpCode = (int) (COperations::ECode::HALT);
+	strByteCode += (char) (nOpCode);
 
 	for (auto mapIterator = mapJumpNameToOffset.begin(); mapIterator != mapJumpNameToOffset.end(); ++mapIterator)
 	{
@@ -176,8 +183,8 @@ std::shared_ptr<char> CParser::Parse(std::string const& strFilePath)
 	return pChar;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace parser

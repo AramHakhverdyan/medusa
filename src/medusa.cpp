@@ -38,7 +38,11 @@ void CMedusa::StartAllProcess()
 	{
 		CProcess* pProcess = (mapIterator->second).get();
 		if (pProcess != nullptr)
+		{
+			//std::thread thCurrProcess(*pProcess);
+			//m_mapIDToThread.emplace(mapIterator->first, thCurrProcess);
 			pProcess->Start();
+		}
 
 		++mapIterator;
 	}

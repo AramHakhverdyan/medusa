@@ -16,6 +16,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 namespace medusa {
 ////////////////////////////////////////////////////////////////////////////////
+namespace expr {
+////////////////////////////////////////////////////////////////////////////////																		
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,9 +32,6 @@ public:// Constructors
 
 public:// Interface Methodes
 	virtual int Eval(std::shared_ptr<CContext> pContext) = 0;
-
-private:// Members
-
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -43,9 +42,7 @@ private:// Members
 class CHaltExpression : public IExpression
 {
 public:// Constructors
-	inline CHaltExpression()
-		: m_nOffset(1)
-	{}
+	inline CHaltExpression() = default;
 	inline ~CHaltExpression() = default;
 
 public:// Interface Methodes
@@ -54,14 +51,8 @@ public:// Interface Methodes
 		CInterrupt pInterrupt(CInterrupt::EndProcess, "END PROOCESS");
 		throw(pInterrupt);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -72,14 +63,9 @@ private:// Members
 class CPushCExpression : public IExpression
 {
 public:// Constructors
-	inline CPushCExpression(int nArgument = 0)
-		: m_nArgument(nArgument),
-		m_nOffset(1)
-	{}
-	inline CPushCExpression(char* pBuffer)
+	inline CPushCExpression(char const* pBuffer)
 	{
 		m_nArgument = *((int*) pBuffer);
-		m_nOffset = 5;
 	}
 	inline ~CPushCExpression() = default;
 
@@ -89,15 +75,124 @@ public:// Interface Methodes
 		std::shared_ptr<CStack> pStack = pContext->GetStack();
 		pStack->Push(m_nArgument);
 
-		return m_nOffset;
+		return 5;
 	}
 
-protected:// Helper Functions
+private:// Members
+	int m_nArgument;
+};
+////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CPushAExpression
+//
+class CPushAExpression : public IExpression
+{
+public:// Constructors
+	inline CPushAExpression(char const* pBuffer)
+	{
+		if (*pBuffer == 'I')
+			m_eRegistr = ERegistr::IP;
+		else if (*pBuffer == 'S')
+			m_eRegistr = ERegistr::SP;
+		else
+			m_eRegistr = ERegistr::FP;
+
+		m_nOffset = *((int*) (pBuffer + 2));
+	}
+	inline ~CPushAExpression() = default;
+
+public:// Interface Methodes
+	int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack> pStack = pContext->GetStack();
+		int nRegistr = 0;
+		switch (m_eRegistr)
+		{
+		case ERegistr::IP:
+			nRegistr = pContext->IP();
+			break;
+		case ERegistr::SP:
+			nRegistr = pContext->SP();
+			break;
+		case ERegistr::FP:
+			nRegistr = pContext->FP();
+			break;
+		}
+
+		int nArgument = (*pStack)[nRegistr + m_nOffset];
+		pStack->Push(nArgument);
+
+		return 7;
+	}
+
+private:// Native Types
+	enum class ERegistr : char
+	{
+		IP,
+		SP,
+		FP
+	};
 
 private:// Members
 	int m_nOffset;
-	int m_nArgument;
+	ERegistr m_eRegistr;
+};
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CPushRExpression
+//
+class CPushRExpression : public IExpression
+{
+public:// Constructors
+	inline CPushRExpression(char const* pBuffer)
+	{
+		if (*pBuffer == 'I')
+			m_eRegistr = ERegistr::IP;
+		else if (*pBuffer == 'S')
+			m_eRegistr = ERegistr::SP;
+		else
+			m_eRegistr = ERegistr::FP;
+	}
+	inline ~CPushRExpression() = default;
+
+public:// Interface Methodes
+	int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack> pStack = pContext->GetStack();
+		int nRegistr = 0;
+		switch (m_eRegistr)
+		{
+		case ERegistr::IP:
+			nRegistr = pContext->IP();
+			break;
+		case ERegistr::SP:
+			nRegistr = pContext->SP();
+			break;
+		case ERegistr::FP:
+			nRegistr = pContext->FP();
+			break;
+		}
+
+		int nArgument = (*pStack)[nRegistr];
+		pStack->Push(nArgument);
+
+		return 3;
+	}
+
+private:// Native Types
+	enum class ERegistr : char
+	{
+		IP,
+		SP,
+		FP
+	};
+
+private:// Members
+	ERegistr m_eRegistr;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -108,9 +203,7 @@ private:// Members
 class CPopExpression : public IExpression
 {
 public:// Constructors
-	inline CPopExpression()
-		: m_nOffset(1)
-	{}
+	inline CPopExpression() = default;
 	inline ~CPopExpression() = default;
 
 public:// Interface Methodes
@@ -119,14 +212,119 @@ public:// Interface Methodes
 		std::shared_ptr<CStack> pStack = pContext->GetStack();
 		pStack->Pop();
 
-		return m_nOffset;
+		return 1;
+	}
+};
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CPopAExpression
+//
+class CPopAExpression : public IExpression
+{
+public:// Constructors
+	inline CPopAExpression(char const* pBuffer)
+	{
+		if (*pBuffer == 'I')
+			m_eRegistr = ERegistr::IP;
+		else if (*pBuffer == 'S')
+			m_eRegistr = ERegistr::SP;
+		else
+			m_eRegistr = ERegistr::FP;
+
+		m_nOffset = *((int*) (pBuffer + 2));
+	}
+	inline ~CPopAExpression() = default;
+
+public:// Interface Methodes
+	int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack> pStack = pContext->GetStack();
+		int nRegistr = 0;
+		switch (m_eRegistr)
+		{
+		case ERegistr::IP:
+			nRegistr = pContext->IP();
+			break;
+		case ERegistr::SP:
+			nRegistr = pContext->SP();
+			break;
+		case ERegistr::FP:
+			nRegistr = pContext->FP();
+			break;
+		}
+
+		int nArgument = pStack->Pop();
+		(*pStack)[nRegistr + m_nOffset] = nArgument;
+
+		return 7;
 	}
 
-protected:// Helper Functions
-
+private:// Native Types
+	enum class ERegistr : char
+	{
+		IP,
+		SP,
+		FP
+	};
 
 private:// Members
 	int m_nOffset;
+	ERegistr m_eRegistr;
+};
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// class CPopRExpression
+//
+class CPopRExpression : public IExpression
+{
+public:// Constructors
+	inline CPopRExpression(char const* pBuffer)
+	{
+		if (*pBuffer == 'I')
+			m_eRegistr = ERegistr::IP;
+		else if (*pBuffer == 'S')
+			m_eRegistr = ERegistr::SP;
+		else
+			m_eRegistr = ERegistr::FP;
+	}
+	inline ~CPopRExpression() = default;
+
+public:// Interface Methodes
+	int Eval(std::shared_ptr<CContext> pContext)
+	{
+		std::shared_ptr<CStack> pStack = pContext->GetStack();
+		int nArgument = pStack->Pop();
+
+		switch (m_eRegistr)
+		{
+		case ERegistr::IP:
+			pContext->IP() = nArgument;
+			break;
+		case ERegistr::SP:
+			pContext->SP() = nArgument;
+			break;
+		case ERegistr::FP:
+			pContext->FP() = nArgument;
+			break;
+		}
+
+		return 3;
+	}
+
+private:// Native Types
+	enum class ERegistr : char
+	{
+		IP,
+		SP,
+		FP
+	};
+
+private:// Members
+	ERegistr m_eRegistr;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -137,9 +335,7 @@ private:// Members
 class CDupExpression : public IExpression
 {
 public:// Constructors
-	inline CDupExpression()
-		: m_nOffset(1)
-	{}
+	inline CDupExpression() = default;
 	inline ~CDupExpression() = default;
 
 public:// Interface Methodes
@@ -148,14 +344,8 @@ public:// Interface Methodes
 		std::shared_ptr<CStack> pStack = pContext->GetStack();
 		pStack->Push(pStack->Top());
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -166,9 +356,7 @@ private:// Members
 class CExchExpression : public IExpression
 {
 public:// Constructors
-	inline CExchExpression()
-		: m_nOffset(1)
-	{}
+	inline CExchExpression() = default;
 	inline ~CExchExpression() = default;
 
 public:// Interface Methodes
@@ -181,14 +369,8 @@ public:// Interface Methodes
 		pStack->Push(nTop1);
 		pStack->Push(nTop2);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -199,9 +381,7 @@ private:// Members
 class CInExpression : public IExpression
 {
 public:// Constructors
-	inline CInExpression()
-		: m_nOffset(1)
-	{}
+	inline CInExpression() = default;
 	inline ~CInExpression() = default;
 
 public:// Interface Methodes
@@ -214,14 +394,8 @@ public:// Interface Methodes
 
 		pStack->Push(nInValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -232,9 +406,7 @@ private:// Members
 class COutExpression : public IExpression
 {
 public:// Constructors
-	inline COutExpression()
-		: m_nOffset(1)
-	{}
+	inline COutExpression() = default;
 	inline ~COutExpression() = default;
 
 public:// Interface Methodes
@@ -243,14 +415,8 @@ public:// Interface Methodes
 		std::shared_ptr<CStack> pStack = pContext->GetStack();
 		std::cout << std::endl << pStack->Top();
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -261,13 +427,9 @@ private:// Members
 class CJumpExpression : public IExpression
 {
 public:// Constructors
-	inline CJumpExpression(int nOffset)
-		: m_nOffset(nOffset)
+	inline CJumpExpression(char const* pBuffer)
+		: m_nOffset(*((int*) pBuffer))
 	{}
-	inline CJumpExpression(char* pBuffer)
-	{
-		m_nOffset = *((int*) pBuffer);
-	}
 	inline ~CJumpExpression() = default;
 
 public:// Interface Methodes
@@ -278,9 +440,6 @@ public:// Interface Methodes
 	
 		return m_nOffset - nCurrIP;
 	}
-
-protected:// Helper Functions
-
 
 private:// Members
 	int m_nOffset;
@@ -294,13 +453,9 @@ private:// Members
 class CJZExpression : public IExpression
 {
 public:// Constructors
-	inline CJZExpression(int nOffset)
-		: m_nOffset(nOffset)
+	inline CJZExpression(char const* pBuffer)
+		: m_nOffset(*((int*) pBuffer))
 	{}
-	inline CJZExpression(char* pBuffer)
-	{
-		m_nOffset = *((int*) pBuffer);
-	}
 	inline ~CJZExpression() = default;
 
 public:// Interface Methodes
@@ -314,9 +469,6 @@ public:// Interface Methodes
 		return 5;
 	}
 
-protected:// Helper Functions
-
-
 private:// Members
 	int m_nOffset;
 };
@@ -329,13 +481,9 @@ private:// Members
 class CJNZExpression : public IExpression
 {
 public:// Constructors
-	inline CJNZExpression(int nOffset)
-		: m_nOffset(nOffset)
+	inline CJNZExpression(char const* pBuffer)
+		: m_nOffset(*((int*) pBuffer))
 	{}
-	inline CJNZExpression(char* pBuffer)
-	{
-		m_nOffset = *((int*) pBuffer);
-	}
 	inline ~CJNZExpression() = default;
 
 public:// Interface Methodes
@@ -349,9 +497,6 @@ public:// Interface Methodes
 		return 5;
 	}
 
-protected:// Helper Functions
-
-
 private:// Members
 	int m_nOffset;
 };
@@ -364,9 +509,7 @@ private:// Members
 class CEQExpression : public IExpression
 {
 public:// Constructors
-	inline CEQExpression()
-		: m_nOffset(1)
-	{}
+	inline CEQExpression() = default;
 	inline ~CEQExpression() = default;
 
 public:// Interface Methodes
@@ -377,14 +520,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue == nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -395,9 +532,7 @@ private:// Members
 class CNEExpression : public IExpression
 {
 public:// Constructors
-	inline CNEExpression()
-		: m_nOffset(1)
-	{}
+	inline CNEExpression() = default;
 	inline ~CNEExpression() = default;
 
 public:// Interface Methodes
@@ -408,14 +543,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue != nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -426,9 +555,7 @@ private:// Members
 class CGTExpression : public IExpression
 {
 public:// Constructors
-	inline CGTExpression()
-		: m_nOffset(1)
-	{}
+	inline CGTExpression() = default;
 	inline ~CGTExpression() = default;
 
 public:// Interface Methodes
@@ -439,14 +566,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue > nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -457,9 +578,7 @@ private:// Members
 class CGEExpression : public IExpression
 {
 public:// Constructors
-	inline CGEExpression()
-		: m_nOffset(1)
-	{}
+	inline CGEExpression() = default;
 	inline ~CGEExpression() = default;
 
 public:// Interface Methodes
@@ -470,14 +589,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue >= nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -488,9 +601,7 @@ private:// Members
 class CLTExpression : public IExpression
 {
 public:// Constructors
-	inline CLTExpression()
-		: m_nOffset(1)
-	{}
+	inline CLTExpression() = default;
 	inline ~CLTExpression() = default;
 
 public:// Interface Methodes
@@ -501,14 +612,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue < nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -519,9 +624,7 @@ private:// Members
 class CLEExpression : public IExpression
 {
 public:// Constructors
-	inline CLEExpression()
-		: m_nOffset(1)
-	{}
+	inline CLEExpression() = default;
 	inline ~CLEExpression() = default;
 
 public:// Interface Methodes
@@ -532,14 +635,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue <= nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -550,9 +647,7 @@ private:// Members
 class CNotExpression : public IExpression
 {
 public:// Constructors
-	inline CNotExpression()
-		: m_nOffset(1)
-	{}
+	inline CNotExpression() = default;
 	inline ~CNotExpression() = default;
 
 public:// Interface Methodes
@@ -562,14 +657,8 @@ public:// Interface Methodes
 		int nValue = pStack->Pop();
 		pStack->Push(~nValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -580,9 +669,7 @@ private:// Members
 class CAndExpression : public IExpression
 {
 public:// Constructors
-	inline CAndExpression()
-		: m_nOffset(1)
-	{}
+	inline CAndExpression() = default;
 	inline ~CAndExpression() = default;
 
 public:// Interface Methodes
@@ -593,14 +680,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue & nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -611,9 +692,7 @@ private:// Members
 class COrExpression : public IExpression
 {
 public:// Constructors
-	inline COrExpression()
-		: m_nOffset(1)
-	{}
+	inline COrExpression() = default;
 	inline ~COrExpression() = default;
 
 public:// Interface Methodes
@@ -624,14 +703,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue | nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -642,9 +715,7 @@ private:// Members
 class CNegExpression : public IExpression
 {
 public:// Constructors
-	inline CNegExpression()
-		: m_nOffset(1)
-	{}
+	inline CNegExpression() = default;
 	inline ~CNegExpression() = default;
 
 public:// Interface Methodes
@@ -654,14 +725,8 @@ public:// Interface Methodes
 		int nValue = pStack->Pop();
 		pStack->Push(-nValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -672,9 +737,7 @@ private:// Members
 class CAddExpression : public IExpression
 {
 public:// Constructors
-	inline CAddExpression()
-		: m_nOffset(1)
-	{}
+	inline CAddExpression() = default;
 	inline ~CAddExpression() = default;
 
 public:// Interface Methodes
@@ -685,14 +748,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue + nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -703,9 +760,7 @@ private:// Members
 class CSubExpression : public IExpression
 {
 public:// Constructors
-	inline CSubExpression()
-		: m_nOffset(1)
-	{}
+	inline CSubExpression() = default;
 	inline ~CSubExpression() = default;
 
 public:// Interface Methodes
@@ -716,14 +771,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue - nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -734,9 +783,7 @@ private:// Members
 class CMulExpression : public IExpression
 {
 public:// Constructors
-	inline CMulExpression()
-		: m_nOffset(1)
-	{}
+	inline CMulExpression() = default;
 	inline ~CMulExpression() = default;
 
 public:// Interface Methodes
@@ -747,14 +794,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue * nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -765,9 +806,7 @@ private:// Members
 class CDivExpression : public IExpression
 {
 public:// Constructors
-	inline CDivExpression()
-		: m_nOffset(1)
-	{}
+	inline CDivExpression() = default;
 	inline ~CDivExpression() = default;
 
 public:// Interface Methodes
@@ -778,14 +817,8 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue / nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -796,9 +829,7 @@ private:// Members
 class CModExpression : public IExpression
 {
 public:// Constructors
-	inline CModExpression()
-		: m_nOffset(1)
-	{}
+	inline CModExpression() = default;
 	inline ~CModExpression() = default;
 
 public:// Interface Methodes
@@ -809,18 +840,14 @@ public:// Interface Methodes
 		int nRValue = pStack->Pop();
 		pStack->Push(nLValue % nRValue);
 
-		return m_nOffset;
+		return 1;
 	}
-
-protected:// Helper Functions
-
-
-private:// Members
-	int m_nOffset;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////////////////////////////
+} // namespace expr
 ////////////////////////////////////////////////////////////////////////////////
 } // namespace medusa
 ////////////////////////////////////////////////////////////////////////////////

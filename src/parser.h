@@ -33,6 +33,7 @@ public:// Constructors
 
 public:// Interface Methodes
 	std::shared_ptr<char> Parse(std::string const& strFilePath);
+	//void OverParse(std::shared_ptr<char> const pBuffer);
 
 private:// Helper Functions
 

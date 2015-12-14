@@ -16,6 +16,7 @@
 // STD Includes
 #include <string>
 #include <memory>
+#include <thread>
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,7 @@ protected:// Helper Functions
 private:// Members
 	std::map< int, std::shared_ptr<CProcess> > m_mapIDToProcess;
 	std::shared_ptr<CModuleManager> m_pModuleManager;
+	std::map<int, std::thread> m_mapIDToThread;
 };
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +66,8 @@ private:// Members
 // Constructors
 inline CMedusa::CMedusa()
 	: m_pModuleManager(new (std::nothrow) CModuleManager),
-	  m_mapIDToProcess()
+	  m_mapIDToProcess(),
+	  m_mapIDToThread()
 {}
 
 inline CMedusa::CMedusa(std::string const& strFilePath)
